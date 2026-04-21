@@ -1,0 +1,16 @@
+0x00007f5d51da3000 0x00007f5d51dcb000 0x28000            0x0                r--p  libc.so.6 
+0x00007f5d51dcb000 0x00007f5d51f33000 0x168000           0x28000            r-xp  libc.so.6 
+0x00007f5d51f33000 0x00007f5d51f86000 0x53000            0x190000           r--p  libc.so.6 
+0x00007f5d51f86000 0x00007f5d51f8a000 0x4000             0x1e3000           r--p  libc.so.6 
+0x00007f5d51f8a000 0x00007f5d51f8c000 0x2000             0x1e7000           rw-p  libc.so.6 
+
+
+
+0x7fff67a9e0b0		(stack)
+0x7fff67a9e080		(stack)
+0x7f5d52008000		(libc + 0x265000)
+0000000000000003	(random data)
+0000000000000000	(random data)
+0x03ae8467164e1d00	(canary)
+0x7fff67a9e0d0		(rbp)
+0x4015f7		(rip)

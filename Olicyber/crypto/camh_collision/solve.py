@@ -1,0 +1,6 @@
+if __name__ == '__main__':
+    p1 = b'\x24\x3f\x6a\x88\x85\xa3'
+    print(p1.hex())
+    
+    p2 = b'\x12\x34\x56\x78\x90\xab\x33\x1a\x15\x33\xbe\xfd'
+    print(p2.hex())

@@ -1,0 +1,22 @@
+perm = [ 0x17, 0x07, 0x26, 0x01, 0x0f, 0x1f, 0x13, 0x24, 0x09, 0x1b, 0x03, 0x21, 0x0e, 0x19, 0x05, 0x25, 0x14, 0x0a, 0x1d, 0x00, 0x10, 0x22, 0x08, 0x1a, 0x02, 0x27, 0x0c, 0x15, 0x23, 0x06, 0x11, 0x1e, 0x0b, 0x16, 0x04, 0x1c, 0x0d, 0x18, 0x20, 0x12 ]
+expected = b'\x6c\x68\x35\x77\x3d\x64\x67\x73\x7b\x7e\x7c\x43\x80\x44\x7b\x8a\x44\x70\x8f\x47\x48\x49\x7b\x7d\x7d\x4d\x8a\x87\x4e\x4d\x84\x8b\x83\x52\x81\x82\x83\x95\x87\x9b'
+
+
+def unscramble(input_buf: bytes) -> bytes:
+    out = b''
+    
+    for n in range(len(perm)):
+        out += bytes([input_buf[perm[n]]])
+    
+    return out
+
+
+def untwist(input_buf: bytes) -> bytes:
+    return bytes([(input_buf[cnt] - cnt) & 0xFF for cnt in range(0x28)])
+
+
+if __name__ == '__main__':
+    flag = untwist(expected)
+    flag = unscramble(flag)
+    
+    print(flag)

@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Route Master - Convertitore GPX</title>
+    <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            min-height: 100vh;
+            background-color: #cfc3ad;
+            /* map survey grid */
+            background-image:
+                repeating-linear-gradient(0deg,  transparent, transparent 59px, rgba(90,65,30,0.12) 59px, rgba(90,65,30,0.12) 60px),
+                repeating-linear-gradient(90deg, transparent, transparent 59px, rgba(90,65,30,0.12) 59px, rgba(90,65,30,0.12) 60px);
+            font-family: 'Special Elite', 'Courier New', monospace;
+            color: #1e0f00;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 28px 16px;
+        }
+
+        /* ── card ─────────────────────────────── */
+        .card {
+            background: #f5ecda;
+            /* aged-paper noise via layered gradients */
+            background-image:
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+            border: 2px solid #9a7a52;
+            width: 100%;
+            max-width: 470px;
+            padding: 36px 34px 28px;
+            position: relative;
+            box-shadow: 5px 5px 0 rgba(0,0,0,0.18);
+        }
+
+        /* inner frame — classic map box double-border */
+        .card::before {
+            content: '';
+            position: absolute;
+            inset: 7px;
+            border: 1px solid rgba(154,122,82,0.45);
+            pointer-events: none;
+        }
+
+        /* outer tick border */
+        .card::after {
+            content: '';
+            position: absolute;
+            inset: -7px;
+            border: 1px dashed rgba(154,122,82,0.3);
+            pointer-events: none;
+        }
+
+        /* ── header ───────────────────────────── */
+        .header {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            margin-bottom: 6px;
+        }
+
+        h1 {
+            font-size: 1.85rem;
+            font-weight: 400;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: #1a0c00;
+            line-height: 1;
+        }
+
+        .tagline {
+            font-family: 'IM Fell English', Georgia, serif;
+            font-style: italic;
+            font-size: 0.75rem;
+            color: #8a6840;
+            margin-top: 5px;
+            letter-spacing: 0.02em;
+        }
+
+        /* ── ornamental divider ───────────────── */
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 16px 0 18px;
+            color: #b09060;
+            font-size: 0.6rem;
+            letter-spacing: 0.2em;
+        }
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #c4a882;
+        }
+
+        /* ── body text ────────────────────────── */
+        .subtitle {
+            font-family: 'IM Fell English', Georgia, serif;
+            font-size: 0.88rem;
+            color: #4a2e10;
+            line-height: 1.65;
+            margin-bottom: 22px;
+        }
+        .subtitle strong {
+            font-family: 'Special Elite', monospace;
+            color: #1a0c00;
+            font-weight: 400;
+        }
+
+        /* ── upload zone ──────────────────────── */
+        .drop-zone {
+            position: relative;
+            border: 2px dashed #9a7a52;
+            padding: 28px 16px 20px;
+            text-align: center;
+            cursor: pointer;
+            margin-bottom: 18px;
+            /* hatched fill like a field-survey area */
+            background: repeating-linear-gradient(
+                -45deg,
+                transparent,
+                transparent 9px,
+                rgba(130,100,55,0.06) 9px,
+                rgba(130,100,55,0.06) 10px
+            );
+            transition: border-color 0.2s, background 0.2s;
+        }
+        .drop-zone:hover,
+        .drop-zone.dragover {
+            border-color: #5c3010;
+            background: rgba(130,100,55,0.1);
+        }
+        .drop-zone input[type="file"] {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer;
+            width: 100%;
+            height: 100%;
+        }
+
+        .drop-icon { font-size: 1.9rem; display: block; margin-bottom: 10px; }
+
+        .drop-label {
+            font-size: 0.84rem;
+            color: #4a2e10;
+            line-height: 1.5;
+        }
+        .drop-label em {
+            font-family: 'IM Fell English', Georgia, serif;
+            font-style: italic;
+            color: #8a6840;
+        }
+
+        .drop-hint {
+            font-family: 'IM Fell English', Georgia, serif;
+            font-style: italic;
+            font-size: 0.72rem;
+            color: #9a7a52;
+            margin-top: 7px;
+        }
+
+        .file-name {
+            font-size: 0.78rem;
+            color: #3a5a20;
+            margin-top: 9px;
+            min-height: 1.1em;
+        }
+
+        /* ── submit button ────────────────────── */
+        button[type="submit"] {
+            width: 100%;
+            padding: 12px;
+            background: #1e0f00;
+            color: #f5ecda;
+            border: 2px solid #1e0f00;
+            font-family: 'Special Elite', monospace;
+            font-size: 0.9rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        button[type="submit"]:hover  { background: #4a2e10; border-color: #4a2e10; }
+        button[type="submit"]:active { transform: translateY(1px); }
+
+        /* ── map legend box ───────────────────── */
+        .legend {
+            margin-top: 20px;
+            border: 1px solid #c4a882;
+            padding: 11px 13px;
+        }
+        .legend-title {
+            font-size: 0.62rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: #9a7a52;
+            margin-bottom: 8px;
+        }
+        .legend-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3px 10px;
+        }
+        .legend-item {
+            font-family: 'IM Fell English', Georgia, serif;
+            font-size: 0.78rem;
+            color: #4a2e10;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .legend-item::before {
+            content: '—';
+            color: #b09060;
+            font-size: 0.6rem;
+            flex-shrink: 0;
+        }
+
+        /* ── coordinate strip ─────────────────── */
+        .coords {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 16px;
+            font-size: 0.62rem;
+            color: #b09060;
+            letter-spacing: 0.06em;
+        }
+
+        /* ── page footer ──────────────────────── */
+        footer {
+            margin-top: 18px;
+            font-family: 'IM Fell English', Georgia, serif;
+            font-style: italic;
+            font-size: 0.7rem;
+            color: #7a6040;
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+
+    <div class="header">
+        <!-- hand-drawn compass rose -->
+        <svg width="46" height="46" viewBox="0 0 46 46" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;margin-top:2px">
+            <circle cx="23" cy="23" r="21" stroke="#9a7a52" stroke-width="1.2"/>
+            <circle cx="23" cy="23" r="14" stroke="#9a7a52" stroke-width="0.6" stroke-dasharray="2 3"/>
+            <circle cx="23" cy="23" r="2.2" fill="#9a7a52"/>
+            <!-- N needle (dark) -->
+            <polygon points="23,5 20.5,23 25.5,23" fill="#1e0f00"/>
+            <!-- S needle (light) -->
+            <polygon points="23,41 20.5,23 25.5,23" fill="#c4a882"/>
+            <!-- cardinal ticks -->
+            <line x1="23" y1="2"  x2="23" y2="5"  stroke="#9a7a52" stroke-width="1.2"/>
+            <line x1="23" y1="41" x2="23" y2="44" stroke="#9a7a52" stroke-width="1.2"/>
+            <line x1="2"  y1="23" x2="5"  y2="23" stroke="#9a7a52" stroke-width="1.2"/>
+            <line x1="41" y1="23" x2="44" y2="23" stroke="#9a7a52" stroke-width="1.2"/>
+            <text x="23" y="14"  text-anchor="middle" font-family="'Special Elite',monospace" font-size="5.5" fill="#1e0f00">N</text>
+            <text x="23" y="39"  text-anchor="middle" font-family="'Special Elite',monospace" font-size="4.5" fill="#9a7a52">S</text>
+            <text x="37.5" y="24.5" text-anchor="middle" font-family="'Special Elite',monospace" font-size="4.5" fill="#9a7a52">E</text>
+            <text x="8.5"  y="24.5" text-anchor="middle" font-family="'Special Elite',monospace" font-size="4.5" fill="#9a7a52">W</text>
+        </svg>
+
+        <div>
+            <h1>Route Master</h1>
+            <div class="tagline">Solo un convertitore GPX :D</div>
+        </div>
+    </div>
+
+    <div class="divider">&#x2731;&#x2006;&#x2006;&#x2006;&#x2731;</div>
+
+    <p class="subtitle">
+        Carica un file <strong>.gpx</strong> registrato sul campo per convertire la tua traccia in
+        formato <strong>GeoJSON</strong></em>
+    </p>
+
+    <form action="/convert" method="post" enctype="multipart/form-data">
+        <div class="drop-zone" id="dropZone">
+            <input type="file" name="file" accept=".gpx" id="fileInput">
+            <span class="drop-icon">&#x1F9ED;</span>
+            <div class="drop-label">
+                Trascina il file qui<br>
+                <em>o clicca per selezionarlo dal disco</em>
+            </div>
+            <div class="drop-hint">Solo GPX&#x202F;1.1!</div>
+            <div class="file-name" id="fileName"></div>
+        </div>
+        <button type="submit">&#x25B6;&ensp;Converti Traccia</button>
+    </form>
+
+    <div class="legend">
+        <div class="legend-title">Legenda &mdash; Formato Richiesto</div>
+        <div class="legend-grid">
+            <span class="legend-item">Schema GPX 1.1</span>
+            <span class="legend-item">Segmenti di traccia</span>
+            <span class="legend-item">Metadati &amp; timestamp</span>
+        </div>
+    </div>
+
+    <div class="coords">
+        <span>45°28&prime;N&ensp;9°11&prime;E</span>
+        <span>SCALE&#x202F;1:25&#x202F;000</span>
+        <span>DATUM&#x202F;WGS84</span>
+    </div>
+
+</div>
+
+<footer>Route Master &mdash; utilità di conversione waypoint e tracce GPS</footer>
+
+<script>
+    const input = document.getElementById('fileInput');
+    const label = document.getElementById('fileName');
+    const zone  = document.getElementById('dropZone');
+
+    input.addEventListener('change', () => {
+        label.textContent = input.files[0] ? '\u25CF\u2002' + input.files[0].name : '';
+    });
+
+    zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('dragover'); });
+    zone.addEventListener('dragleave', () => zone.classList.remove('dragover'));
+    zone.addEventListener('drop',      () => zone.classList.remove('dragover'));
+</script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+{
+  "name": "backend-express",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "dev": "nodemon --legacy-watch server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Gioppyy, EnricoDev1",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "morgan": "^1.10.0",
+    "mysql2": "^3.14.0",
+    "nodemon": "^3.1.9",
+    "retry": "^0.13.1"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.3",
+    "tailwindcss": "^3.3.3"
+  }
+}

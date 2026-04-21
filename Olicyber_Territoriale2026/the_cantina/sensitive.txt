@@ -1,0 +1,60 @@
+
+  _____ _           ___          _   _
+ |_   _| |_  ___   / __|__ _ _ _| |_(_)_ _  __ _
+   | | | ' \/ -_) | (__/ _` | ' \  _| | ' \/ _` |
+   |_| |_||_\___|  \___\__,_|_||_\__|_|_||_\__,_|
+
+    Terminale della Cantina di Mos Eisley — Est. 0 BBY
+
+> 
+select_coin
+
+EUR
+
+OK
+> 
+select_wallet
+
+0xBABE
+
+OK
+> 
+authenticate
+
+Q: Chi ha sparato per primo?
+
+Han
+
+Q: Chi è il padre di Luke?
+
+Vader
+
+Q: Qual è il pianeta natale dei Wookiee?
+
+Kashyyyk
+
+OK: Accesso autorizzato. Benvenuto, Comandante.
+> 
+topup_wallet
+
+OK: Le casse sono piene di nuovo. Che i tuoi acquisti siano degni. Saldo: 10050 OLI
+> 
+list_drinks
+
+--- Menù della Cantina ---
+  Corellian Ale: 50 OLI [DISPONIBILE]
+  Jawa Juice: 120 OLI [DISPONIBILE]
+  Spotchka: 200 OLI [DISPONIBILE]
+  Tatooine Sunset: 350 OLI [DISPONIBILE]
+  Darksaber Distillate: 9999 OLI [DISPONIBILE] [*** ESCLUSIVO ***]
+--------------------
+> 
+buy_drink
+
+Darksaber Distillate
+
+ERRORE: I crediti devono scorrere — ma solo crediti OLI a questo terminale.
+> 
+exit
+
+Che la Forza sia con te. Sempre.

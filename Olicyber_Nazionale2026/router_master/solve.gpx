@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<root xmlns:gpx="http://www.topografix.com/GPX/1/1">
+    <gpx:metadata>
+        <gpx:name>$(ls)</gpx:name>
+        <gpx:time>
+
+        </gpx:time>
+    </gpx:metadata>
+    <gpx:trk>
+        <gpx:trkseg>
+            <gpx:trkpt>
+                <gpx:ele>
+                    
+                </gpx:ele>
+            </gpx:trkpt>
+        </gpx:trkseg>
+    </gpx:trk>
+</root>

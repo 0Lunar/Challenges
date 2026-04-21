@@ -1,0 +1,15 @@
+services:
+  chall:
+    build: .
+    restart: unless-stopped
+    container_name: route_master
+    ports:
+      - "5000:5000"
+    environment:
+      - PYTHONDONTWRITEBYTECODE=1
+    read_only: true
+    tmpfs:
+      - /tmp:size=64m,mode=1777
+    cap_drop:
+      - ALL
+    pids_limit: 100
