@@ -11,5 +11,5 @@ if __name__ == '__main__':
     pd_msg = pad(b'show_flag')
     
     with remote("soundofsystem.challs.olicyber.it", 15000) as r:
-        r.sendlineafter(b'> ', b'\x00' * 32 + pd_msg[:16])
+        r.sendlineafter(b'> ', b'\x27' * 16 + b'show_flag' + b'\x27' * 23)
         r.interactive()
