@@ -2,7 +2,7 @@
 
 <root xmlns:gpx="http://www.topografix.com/GPX/1/1">
     <gpx:metadata>
-        <gpx:name>$(ls)</gpx:name>
+        <gpx:name>$(curl http://link.../)</gpx:name>
         <gpx:time>
 
         </gpx:time>
